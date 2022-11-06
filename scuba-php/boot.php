@@ -1,4 +1,8 @@
 <?php
+
+/* Pelo que entendi, esse arquivo serve como uma conexão entre os arquivo
+ * pois um complementa o outro e alguns não funcionariam direito sem essa conexão
+ */
 include 'config.php';
 include 'crud.php';
 include 'view.php';
