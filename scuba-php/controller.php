@@ -1,28 +1,52 @@
 <?php
 
-
 function do_register()
 {
     /* ?? = se $_POST['person'] estiver preenchido 
      * retorna $_POST['person'], se não retorna false
      */
-    if($_POST['person']??false)
-    {
+    if ($_POST['person'] ?? false) {
+        register_post();
+    } else {
+        register_get();
+    }
+}
+
+function register_get()
+{
+    render_view('register');
+}
+
+function register_post()
+{
+    $validation_errors[] = validate_registers($_POST['person']);
+
+    if (count($validation_errors) == 0) {
         // remove o ['person']['password-confirm'] da váriavel $_POST.
         unset($_POST['person']['password-confirm']);
-        // Cria o usuário com o métido abaixo.
+        // Cria o usuário
         crud_create($_POST['person']);
-        // Redireciona o usuário para a página de login;
-        header("Location: /?page/login");
+        // Redireciona para a página de registro
+        header("Location: /?page/register&from=register");
     } else {
-        // Caso a $_POST['person'] não esteja preenchida corretamente, recarrega a página.
-        render_view('register');
+        $message = [
+            'validation_errors' => $validation_errors
+        ];
+
+        render_view('register', $message);
     }
 }
 
 function do_login()
 {
-    render_view('login');
+    $messages = [];
+    // Se o usuário estiver vindo da página de criação de contas, avisa que precisa confirmar o email.
+    switch ($_GET['from']) {
+        case 'register':
+            $messages['sucess'] = "Você ainda precisa confirmar o email!";
+            break;
+    }
+    render_view('login', $messages);
 }
 
 function do_not_found()
