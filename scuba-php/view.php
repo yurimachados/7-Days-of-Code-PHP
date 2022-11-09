@@ -1,17 +1,18 @@
 <?php
 
-function render_view($template)
+function render_view($template,$messages = [])
 {
-    $content = file_get_contents(VIEW_FOLDER."$template.view");
+    $content = load_content($template,$messages);
     echo $content;
 }
 
 function load_content($template, $messages)
 {
     $validation_errors = $messages['validation_errors']??[];
-    $sucess_msg = $messagers['sucess']??'';
+    $success_msg = $messagers['success']??'';
     $content = file_get_contents(VIEW_FOLDER."$template.view");
     $content = put_error_data($content,$validation_errors);
+    $content = put_success_msg($content,$success_msg);
     $content = put_old_values($content);
     return $content;
 }
@@ -19,7 +20,7 @@ function load_content($template, $messages)
 function put_success_msg($content,$success_msg)
 {
     $success_msg = success_msg_maker($success_msg);
-    $content = data_binding($content, ['{{success}}'=>$success_msg]);
+    $content = data_binding($content,['{{success}}'=>$success_msg]);
     return $content;
 }
 
@@ -81,7 +82,7 @@ function error_msg_maker($msg)
 function success_msg_maker($msg)
 {
     $success = '<div class="mensagem-sucesso">
-    <p>'.$msg.'</p>
+        <p>'.$msg.'</p>
     </div>';
     return $success;
 }

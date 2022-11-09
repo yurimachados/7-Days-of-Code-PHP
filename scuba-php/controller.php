@@ -5,7 +5,7 @@ function do_register()
     /* ?? = se $_POST['person'] estiver preenchido 
      * retorna $_POST['person'], se não retorna false
      */
-    if ($_POST['person'] ?? false) {
+    if ($_POST['person']??false) {
         register_post();
     } else {
         register_get();
@@ -19,7 +19,7 @@ function register_get()
 
 function register_post()
 {
-    $validation_errors[] = validate_registers($_POST['person']);
+    $validation_errors = validate_registers($_POST['person']);
 
     if (count($validation_errors) == 0) {
         // remove o ['person']['password-confirm'] da váriavel $_POST.
@@ -27,7 +27,7 @@ function register_post()
         // Cria o usuário
         crud_create($_POST['person']);
         // Redireciona para a página de registro
-        header("Location: /?page/register&from=register");
+        header("Location: /?page=login&from=register");
     } else {
         $message = [
             'validation_errors' => $validation_errors

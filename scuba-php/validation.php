@@ -6,9 +6,8 @@ function validate_registers($data)
     $errors = [];
 
     // Valida se a senha é menor de 10;
-    if(strlen($data['password']) < 10){
-        $errors['password'] = 'A senha deve ter 10 caracteres ou mais';
-
+    if(strlen($data['password']) < 4){
+        $errors['password'] = 'A senha deve ter 4 caracteres ou mais';
     }
     // Valida se o password e password-confirm estão iguais;
     if($data['password'] !== $data['password-confirm']){
@@ -18,6 +17,8 @@ function validate_registers($data)
     if(crud_restore($data['email'])){
         $errors['email'] = 'Email já cadastrado no sistema, informe outro!';
     }
+
+    return $errors;
 }
 
 ?>
