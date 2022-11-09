@@ -24,15 +24,21 @@ function register_post()
     if (count($validation_errors) == 0) {
         // remove o ['person']['password-confirm'] da váriavel $_POST.
         unset($_POST['person']['password-confirm']);
+        // Cria o usuário com a validação por email como false;
+        $_POST['person']['mail_validation'] = false;
         // Cria o usuário
         crud_create($_POST['person']);
+        //
+        $email = $_POST['person']['email'];
+        $url = APP_URL."?page=mail-validation&token=";
+        $url .= ssl_crypt($email);
+        send_email($email,"Ative a conta",$url);
         // Redireciona para a página de registro
         header("Location: /?page=login&from=register");
     } else {
         $message = [
             'validation_errors' => $validation_errors
         ];
-
         render_view('register', $message);
     }
 }
@@ -47,6 +53,11 @@ function do_login()
             break;
     }
     render_view('login', $messages);
+}
+
+function do_validation()
+{
+    echo'wip';
 }
 
 function do_not_found()
